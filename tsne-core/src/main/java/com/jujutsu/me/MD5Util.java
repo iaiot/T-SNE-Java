@@ -42,18 +42,18 @@ public class MD5Util {
     }
 
     /**
-     * 二维double数组转MD5
+     * 多维double数组转MD5
      *
-     * @param doubles 二维double数组
+     * @param doubles 多维double数组
      * @return MD5str
      */
     public static String double22MD5(double[][] doubles) {
-        if (doubles == null){
+        if (doubles == null || doubles.length < 1){
             return null;
         }
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < doubles.length; i++) {
-            for (int j = 0; j < 2; j++){
+            for (int j = 0; j < doubles[0].length; j++){
                 buf.append(doubles[i][j]);
             }
         }
