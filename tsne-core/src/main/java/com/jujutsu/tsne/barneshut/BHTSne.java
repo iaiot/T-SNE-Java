@@ -39,6 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.me.MD5Util;
+import com.me.TsneCacheManager;
+import com.me.TsneThreadManager;
 import com.jujutsu.tsne.PrincipalComponentAnalysis;
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.utils.MatrixOps;
@@ -188,6 +191,12 @@ public class BHTSne implements BarnesHutTSne {
 		if(exact) System.out.printf("Done in %4.2f seconds!\nLearning embedding...\n", (end - start) / 1000.0);
 		else System.out.printf("Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (end - start) / 1000.0, (double) row_P[N] / ((double) N * (double) N));
 		start = System.currentTimeMillis();
+		String cacheKey;
+		Thread thread;
+		if (TsneThreadManager.ENABLE_THREAD){
+			cacheKey = MD5Util.double22MD5(parameterObject.getXin());
+			thread = TsneThreadManager.getThread(cacheKey);
+		}
 		for(int iter = 0; iter < parameterObject.getMaxIter() && !abort; iter++) {
 
 			if(exact) computeExactGradient(P, Y, N, no_dims, dY);
@@ -224,11 +233,28 @@ public class BHTSne implements BarnesHutTSne {
 				}
 				start = System.currentTimeMillis();
 			}
+			if (TsneThreadManager.ENABLE_THREAD){
+				// 每次迭代输出计算的中间结果
+				TsneCacheManager.setData(cacheKey, expand(Y,N,no_dims), -1);
+				if (thread.isInterrupted()){
+					// 结束当前计算线程，清除中间结果缓存
+					TsneCacheManager.clear(cacheKey);
+					break;
+				}
+			}
 		}
 		end = System.currentTimeMillis(); total_time += (end - start) / 1000.0;
 
 		System.out.printf("Fitting performed in %4.2f seconds.\n", total_time);
-		return expand(Y,N,no_dims);
+		double[][] finaly = expand(Y,N,no_dims);
+		if (TsneThreadManager.ENABLE_THREAD){
+			if (!thread.isInterrupted()){
+				TsneCacheManager.setFinalData(cacheKey, finaly, -1);
+			}
+			// 删除线程数据
+			TsneThreadManager.clear(cacheKey);
+		}
+		return finaly;
 	}
 
 	void updateGradient(int N, int no_dims, double[] Y, double momentum, double eta, double[] dY, double[] uY,
