@@ -33,7 +33,7 @@ public class TsneThreadManager {
     private static Map<String, Thread> TSNE_THRED_MAP = new ConcurrentHashMap<>();
 
     /**
-     * 创建一个线程执行降维计算，并返回第一次计算的结果
+     * 创建一个线程执行降维计算，并返回中间计算的结果
      *
      * @param threadKey 线程key
      * @param config    TSneConfiguration
@@ -47,6 +47,9 @@ public class TsneThreadManager {
         for (int i = 0; i < TIME_OUT / SINGLE_WAIT_TIME; i++) {
             if (TsneCacheManager.containsKey(threadKey)) {
                 return TsneCacheManager.getData(threadKey);
+            }
+            if (TsneCacheManager.containsFinalKey(threadKey)) {
+                return TsneCacheManager.getFinalData(threadKey);
             }
             try {
                 Thread.sleep(SINGLE_WAIT_TIME);
