@@ -71,6 +71,16 @@ public class TsneThreadManager {
     }
 
     /**
+     * 判断线程是否存在
+     *
+     * @param threadKey key
+     * @return boolean
+     */
+    public static boolean containsKey(String threadKey) {
+        return TSNE_THRED_MAP.containsKey(threadKey);
+    }
+    
+    /**
      * 根据 threadKey 获取指定线程
      *
      * @param threadKey 线程key
