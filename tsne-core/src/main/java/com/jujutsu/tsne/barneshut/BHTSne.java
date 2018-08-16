@@ -192,10 +192,14 @@ public class BHTSne implements BarnesHutTSne {
 		else System.out.printf("Done in %4.2f seconds (sparsity = %f)!\nLearning embedding...\n", (end - start) / 1000.0, (double) row_P[N] / ((double) N * (double) N));
 		start = System.currentTimeMillis();
 		String cacheKey;
-		Thread thread;
-		if (TsneThreadManager.ENABLE_THREAD){
+		Thread thread = null;
+		boolean enableThread = false;
+		if (TsneThreadManager.ENABLE_THREAD) {
 			cacheKey = MD5Util.double22MD5(parameterObject.getXin());
-			thread = TsneThreadManager.getThread(cacheKey);
+			if (TsneThreadManager.containsKey(cacheKey)) {
+				enableThread = true;
+				thread = TsneThreadManager.getThread(cacheKey);
+			}
 		}
 		for(int iter = 0; iter < parameterObject.getMaxIter() && !abort; iter++) {
 
@@ -233,7 +237,7 @@ public class BHTSne implements BarnesHutTSne {
 				}
 				start = System.currentTimeMillis();
 			}
-			if (TsneThreadManager.ENABLE_THREAD){
+			if (enableThread) {
 				// 每次迭代输出计算的中间结果
 				TsneCacheManager.setData(cacheKey, expand(Y,N,no_dims), -1);
 				if (thread.isInterrupted()){
@@ -247,7 +251,7 @@ public class BHTSne implements BarnesHutTSne {
 
 		System.out.printf("Fitting performed in %4.2f seconds.\n", total_time);
 		double[][] finaly = expand(Y,N,no_dims);
-		if (TsneThreadManager.ENABLE_THREAD){
+		if (enableThread) {
 			if (!thread.isInterrupted()){
 				TsneCacheManager.setFinalData(cacheKey, finaly, -1);
 			}
