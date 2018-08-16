@@ -1,4 +1,4 @@
-在 lejon/T-SNE-Java 基础上增加多线程和缓存
+在 lejon/T-SNE-Java 基础上增加多线程和缓存，开关：TsneThreadManager.ENABLE_THREAD
 
 [![Build Status](https://travis-ci.org/lejon/T-SNE-Java.svg?branch=master)](https://travis-ci.org/lejon/T-SNE-Java)
 
