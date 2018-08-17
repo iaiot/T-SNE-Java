@@ -1,4 +1,4 @@
-package com.me;
+package com.jujutsu.me;
 
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.tsne.barneshut.BHTSne;

@@ -39,9 +39,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.me.MD5Util;
-import com.me.TsneCacheManager;
-import com.me.TsneThreadManager;
+import com.jujutsu.me.MD5Util;
+import com.jujutsu.me.TsneCacheManager;
+import com.jujutsu.me.TsneThreadManager;
 import com.jujutsu.tsne.PrincipalComponentAnalysis;
 import com.jujutsu.tsne.TSneConfiguration;
 import com.jujutsu.utils.MatrixOps;

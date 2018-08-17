@@ -1,4 +1,4 @@
-package com.me;
+package com.jujutsu.me;
 
 import java.util.Date;
 import java.util.Map;
