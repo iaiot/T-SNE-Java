@@ -19,7 +19,7 @@ public class TsneCacheManager {
     /**
      * 最终计算结果缓存
      */
-    private static Map<String, CacheData> FINAL_CACHE_DATA = new ConcurrentHashMap<>();
+    private static LRULinkedHashMap<String, CacheData> FINAL_CACHE_DATA = new LRULinkedHashMap<>(20);
 
     /**
      * 判断是否存在key
