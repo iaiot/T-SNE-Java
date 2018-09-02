@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * @param <K> <K>
  * @param <V> <V>
- * @author anbai
+ * @author hjl
  */
 public class LRULinkedHashMap<K, V> extends LinkedHashMap<K, V> implements Map<K, V> {
 
